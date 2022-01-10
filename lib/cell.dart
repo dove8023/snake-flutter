@@ -5,6 +5,7 @@ import './core/snake.dart';
 class CellWidget extends StatefulWidget {
   const CellWidget({Key? key, required this.id}) : super(key: key);
   final String id;
+  final Type type = Type.blank;
 
   @override
   State<StatefulWidget> createState() => Cell();
@@ -13,6 +14,20 @@ class CellWidget extends StatefulWidget {
 class Cell extends State<CellWidget> {
   @override
   Widget build(BuildContext context) {
+    snakeInstance.on("move", (List<Node> snakeBody) {
+      Node? target;
+      final res = snakeBody.any((element) {
+        if (element.cellId == widget.id) {
+          target = element;
+          return true;
+        }
+
+        return false;
+      });
+
+      res ? display(target!.type) : display(Type.blank);
+    });
+
     return Container(
       padding: const EdgeInsets.all(2.0),
       constraints: const BoxConstraints.tightFor(width: 20.0, height: 20.0),

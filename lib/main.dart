@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:snake_flutter/core/constant.dart';
 
 import 'cell.dart';
+import 'core/snake.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +14,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: MyHomePage(x: 20, y: 30),
+      home: MyHomePage(x: snakeConfig["x"]!, y: snakeConfig["y"]!),
     );
   }
 }
@@ -38,17 +40,55 @@ class _MyHomePageState extends State<MyHomePage> {
     return mainBox();
   }
 
+  @override
+  initState() {
+    snakeInstance.start();
+  }
+
   Widget mainBox() {
     return Center(
+        child: GestureDetector(
+      onVerticalDragUpdate: (DragUpdateDetails details) {
+        // print("onVerticalDragUpdate ${details.delta.dy}");
+
+        double dy = details.delta.dy;
+        if (dy.abs() < 0.5) {
+          return;
+        }
+
+        if (dy > 0) {
+          snakeInstance.direction = Direction.bottom;
+        }
+
+        if (dy < 0) {
+          snakeInstance.direction = Direction.top;
+        }
+      },
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        // print("onHorizontalDragUpdate ${details.delta.dx}");
+
+        double dx = details.delta.dx;
+        if (dx.abs() < 0.5) {
+          return;
+        }
+
+        if (dx > 0) {
+          snakeInstance.direction = Direction.right;
+        }
+
+        if (dx < 0) {
+          snakeInstance.direction = Direction.left;
+        }
+      },
       child: Container(
         constraints: BoxConstraints.tightFor(
             width: border * widget.x + 2, height: border * widget.y + 2),
         decoration: BoxDecoration(
-          border: Border.all(width: 1.0, color: Colors.grey.shade300),
-        ),
+            border: Border.all(width: 1.0, color: Colors.grey.shade300),
+            color: Colors.white),
         child: createGrides(),
       ),
-    );
+    ));
   }
 
   createGrides() {

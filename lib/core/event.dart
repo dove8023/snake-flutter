@@ -6,20 +6,25 @@
  */
 
 class Event {
-  final store = <String, List<Function>>{};
+  final Map<String, List<Function>> store = {};
 
   on(String eventName, Function callback) {
     if (!store.keys.contains(eventName)) {
       store[eventName] = [];
     }
+
+    store[eventName]!.add(callback);
   }
 
-  emit(String eventName, String type) {
-    var callbacks = store[eventName];
-    if (callbacks == null || callbacks.isEmpty) {
+  emit(String eventName, List arr) {
+    final List? callbacks = store[eventName];
+    if (callbacks == null) {
       return;
     }
+    print('emit call ${callbacks.length}');
 
-    callbacks.map((e) => e(type));
+    callbacks.forEach((element) {
+      element(arr);
+    });
   }
 }
