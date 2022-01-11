@@ -14,14 +14,41 @@ import './constant.dart';
 const Map<String, int> snakeConfig = {"x": 19, "y": 30};
 
 class Snake extends Event {
-  Snake(this.x, this.y) {
-    create();
-  }
+  Snake(this.x, this.y);
 
   final int x;
   final int y;
   final List<Node> snakeBody = [];
-  Direction direction = Direction.right;
+  late Direction _direction = Direction.right;
+
+  get direction {
+    return _direction;
+  }
+
+  set direction(val) {
+    if (val == _direction) {
+      return;
+    }
+
+    if (val == Direction.top && _direction == Direction.bottom) {
+      return;
+    }
+
+    if (val == Direction.bottom && _direction == Direction.top) {
+      return;
+    }
+
+    if (val == Direction.left && _direction == Direction.right) {
+      return;
+    }
+
+    if (val == Direction.right && _direction == Direction.left) {
+      return;
+    }
+
+    _direction = val;
+  }
+
   late Timer timer;
 
   create() {
@@ -29,10 +56,11 @@ class Snake extends Event {
     head.x = x ~/ 2;
     head.y = y ~/ 2;
 
+    snakeBody.clear();
     snakeBody.add(head);
-    snakeBody.add(Node(head.x - 1, head.y, Type.body));
-    snakeBody.add(Node(head.x - 2, head.y, Type.body));
-    snakeBody.add(Node(head.x - 3, head.y, Type.body));
+    snakeBody.insert(0, Node(head.x - 1, head.y, Type.body));
+    snakeBody.insert(0, Node(head.x - 2, head.y, Type.body));
+    snakeBody.insert(0, Node(head.x - 3, head.y, Type.body));
   }
 
   move() {
@@ -57,7 +85,7 @@ class Snake extends Event {
   }
 
   Node next() {
-    final Node head = snakeBody[0];
+    final Node head = snakeBody.last;
     final Node nextHead = Node(head.x, head.y, Type.head);
 
     switch (direction) {
@@ -81,14 +109,15 @@ class Snake extends Event {
   }
 
   start() {
+    create();
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       move();
     });
   }
 
   died() {
-    print('died call');
     timer.cancel();
+    emit("died", []);
   }
 }
 
@@ -128,7 +157,7 @@ class Node {
   @override
   String toString() {
     super.toString();
-    return '$x, $y';
+    return '$x, $y, $type';
   }
 }
 

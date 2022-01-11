@@ -12,8 +12,12 @@ class CellWidget extends StatefulWidget {
 }
 
 class Cell extends State<CellWidget> {
+  Color? color;
+
   @override
-  Widget build(BuildContext context) {
+  initState() {
+    super.initState();
+
     snakeInstance.on("move", (List<Node> snakeBody) {
       Node? target;
       final res = snakeBody.any((element) {
@@ -25,9 +29,14 @@ class Cell extends State<CellWidget> {
         return false;
       });
 
-      res ? display(target!.type) : display(Type.blank);
+      setState(() {
+        color = res ? display(target!.type) : display(Type.blank);
+      });
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(2.0),
       constraints: const BoxConstraints.tightFor(width: 20.0, height: 20.0),
@@ -35,11 +44,14 @@ class Cell extends State<CellWidget> {
           border: Border(
               right: BorderSide(color: Colors.black45, width: 1.0),
               bottom: BorderSide(color: Colors.black45, width: 1.0))),
-      child: display(Type.blank),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0), color: color),
+      ),
     );
   }
 
-  Widget display(Type type) {
+  Color? display(Type type) {
     Color? color;
     switch (type) {
       case Type.blank:
@@ -55,10 +67,6 @@ class Cell extends State<CellWidget> {
         color = Colors.blue.shade300;
     }
 
-    return Container(
-      constraints: const BoxConstraints.expand(),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0), color: color),
-    );
+    return color;
   }
 }

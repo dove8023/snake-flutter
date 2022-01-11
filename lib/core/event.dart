@@ -16,15 +16,14 @@ class Event {
     store[eventName]!.add(callback);
   }
 
-  emit(String eventName, List arr) {
+  emit(String eventName, List? arr) {
     final List? callbacks = store[eventName];
     if (callbacks == null) {
       return;
     }
-    print('emit call ${callbacks.length}');
 
-    callbacks.forEach((element) {
-      element(arr);
-    });
+    for (int i = 0; i < callbacks.length; i++) {
+      callbacks[i](arr);
+    }
   }
 }

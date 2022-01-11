@@ -42,15 +42,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   initState() {
+    super.initState();
     snakeInstance.start();
+    snakeInstance.on("died", (res) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Game over"),
+              // content: Text("您确定要删除当前文件吗?"),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("Play again"),
+                  onPressed: () {
+                    //关闭对话框并返回true
+                    Navigator.of(context).pop(true);
+                    snakeInstance.start();
+                  },
+                ),
+              ],
+            );
+          });
+    });
   }
 
   Widget mainBox() {
     return Center(
         child: GestureDetector(
       onVerticalDragUpdate: (DragUpdateDetails details) {
-        // print("onVerticalDragUpdate ${details.delta.dy}");
-
         double dy = details.delta.dy;
         if (dy.abs() < 0.5) {
           return;
@@ -65,8 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        // print("onHorizontalDragUpdate ${details.delta.dx}");
-
         double dx = details.delta.dx;
         if (dx.abs() < 0.5) {
           return;
