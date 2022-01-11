@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     snakeInstance.start();
     snakeInstance.on("died", (res) {
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) {
             return AlertDialog(
