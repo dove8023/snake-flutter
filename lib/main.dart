@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:snake_flutter/core/constant.dart';
 
 import 'cell.dart';
 import 'core/snake.dart';
@@ -51,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) {
             return AlertDialog(
               title: const Text("Game over"),
-              // content: Text("您确定要删除当前文件吗?"),
               actions: <Widget>[
                 TextButton(
                   child: const Text("Play again"),

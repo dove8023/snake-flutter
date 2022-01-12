@@ -7,8 +7,8 @@
 
 import 'dart:async';
 
-import './event.dart';
-export './constant.dart' show Type;
+import './event.dart' show Event;
+export './constant.dart' show Type, Direction;
 import './constant.dart';
 
 const Map<String, int> snakeConfig = {"x": 19, "y": 30};
